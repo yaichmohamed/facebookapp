@@ -17,11 +17,11 @@ const register = async (req, res) => {
 
         console.log(req.body)
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const user = new User({...req.body, password: hashedPassword})
+        const newUser = await User.create({...req.body, password: hashedPassword})
         await user.save()
 
-        const payload = {id: user._id, username: user.username}
-        const {password, ...others} = user._doc
+        const payload = {id: newUser._id, username: newUser.username}
+        const {password, ...others} = newUser._doc
 
         const token = jwt.sign(payload, process.env.JWT_SECRET)
 
